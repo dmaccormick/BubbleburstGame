@@ -111,7 +111,7 @@ MonoBehaviour:
   m_CenterAnchor: {fileID: 5604856721687947742}
   m_CellParent: {fileID: 5604856722061643917}
   m_CellPrefab: {fileID: 1747299934208261956, guid: ca8bd0eae6723aa48ad4327ed61da1b1, type: 3}
-  m_GridCellCount: {x: 5, y: 5}
+  m_GridCellCount: {x: 7, y: 7}
   m_GridCellWorldSize: 1
   m_BubblePrefabs:
   - {fileID: 2188725119830896086, guid: 2a14a5dc3752e8a4abc4f80342540289, type: 3}

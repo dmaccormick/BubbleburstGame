@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8194594896466507531}
   - component: {fileID: 2090048651681901215}
+  - component: {fileID: 503932838786569144}
   m_Layer: 0
   m_Name: Bubble
   m_TagString: Untagged
@@ -46,6 +47,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BubbleColour: 5
+  m_Visuals: {fileID: 2994375679195341612}
+--- !u!65 &503932838786569144
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496570200999191408}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9, y: 0.9, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4552980355916670535
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +72,6 @@ GameObject:
   - component: {fileID: 1670518562458162818}
   - component: {fileID: 7391812438651498548}
   - component: {fileID: 4401042572942299649}
-  - component: {fileID: 4664797977197693560}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -130,19 +144,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4664797977197693560
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4552980355916670535}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8047159365890328351
 GameObject:
   m_ObjectHideFlags: 0
