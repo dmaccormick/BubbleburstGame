@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using DanMacC.Utilities.Extensions;
+using DanMacC.BubbleBurst.Bubbles;
+using System.Linq;
 
 namespace DanMacC.BubbleBurst.Grid
 {
@@ -9,13 +9,17 @@ namespace DanMacC.BubbleBurst.Grid
     {
         public float HalfCellWorldSize => m_GridCellWorldSize * 0.5f;
 
+        [Header("Grid References")]
         [SerializeField] private Transform m_CenterAnchor;
         [SerializeField] private Transform m_CellParent;
-
         [SerializeField] private GridCell m_CellPrefab;
 
+        [Header("Grid Sizing")]
         [SerializeField] private Vector2Int m_GridCellCount = new Vector2Int(5, 5);
         [SerializeField] private float m_GridCellWorldSize = 1.0f;
+
+        [Header("Bubbles")]
+        [SerializeField] private Bubble[] m_BubblePrefabs;
 
         private GridCell[,] m_Cells;
 
@@ -103,6 +107,15 @@ namespace DanMacC.BubbleBurst.Grid
 
             cell = null;
             return false;
+        }
+
+        /// <summary>
+        /// Get the bubble prefab associated with the requested colour
+        /// Can return null if there is no match found
+        /// </summary>
+        public Bubble GetBubblePrefab(BubbleColour colour)
+        {
+            return m_BubblePrefabs.FirstOrDefault(x => x.Colour == colour);
         }
 
         /// <summary>

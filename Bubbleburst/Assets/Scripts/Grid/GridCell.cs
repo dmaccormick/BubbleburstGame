@@ -1,20 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine;
 using System.Text;
-using UnityEngine;
+using System.Collections.Generic;
+using DanMacC.BubbleBurst.Bubbles;
 
 namespace DanMacC.BubbleBurst.Grid
 {
     public class GridCell : MonoBehaviour
     {
-        public bool IsEmpty => m_CurrentObject == null;
+        public bool IsEmpty => m_Bubble == null;
         public bool IsFilled => !IsEmpty;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int GridCoord => m_GridCoord;
 
+        [SerializeField] private Transform m_BubbleAnchor;
+
         private GridManager m_Manager;
         private Vector2Int m_GridCoord = new Vector2Int(0, 0);
-        private GridObject m_CurrentObject;
+        private Bubble m_Bubble;
 
         private Dictionary<Vector2Int, GridCell> m_Neighbours = new()
         {
@@ -31,11 +33,21 @@ namespace DanMacC.BubbleBurst.Grid
             m_GridCoord = coord;
 
             gameObject.name = $"Cell [{m_GridCoord.x}][{m_GridCoord.y}]";
+
+            GenerateBubble();
         }
 
         public void SetNeighbour(Vector2Int direction, GridCell cell)
         {
             m_Neighbours[direction] = cell;
+        }
+
+        public void GenerateBubble()
+        {
+            int bubbleColourIndex = Random.Range(0, (int)BubbleColour.Count);
+            Bubble bubblePrefab = m_Manager.GetBubblePrefab((BubbleColour)bubbleColourIndex);
+
+            m_Bubble = Instantiate(bubblePrefab, m_BubbleAnchor);
         }
 
         [ContextMenu("OutputDebugInfo()")]

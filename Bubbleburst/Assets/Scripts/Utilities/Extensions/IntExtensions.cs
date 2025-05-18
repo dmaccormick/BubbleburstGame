@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class IntExtensions
+namespace DanMacC.Utilities.Extensions
 {
-    public static bool IsEven(this int value)
+    public static class IntExtensions
     {
-        return value % 2 == 0;
+        public static bool IsEven(this int value)
+        {
+            return value % 2 == 0;
+        }
     }
 }

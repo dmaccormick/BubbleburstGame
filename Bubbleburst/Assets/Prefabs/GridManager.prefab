@@ -113,3 +113,8 @@ MonoBehaviour:
   m_CellPrefab: {fileID: 1747299934208261956, guid: ca8bd0eae6723aa48ad4327ed61da1b1, type: 3}
   m_GridCellCount: {x: 5, y: 5}
   m_GridCellWorldSize: 1
+  m_BubblePrefabs:
+  - {fileID: 2188725119830896086, guid: 2a14a5dc3752e8a4abc4f80342540289, type: 3}
+  - {fileID: 3785212838967447766, guid: 4a2f824b81092ed4482bdbfcee0404ed, type: 3}
+  - {fileID: 8870657181390969843, guid: 75f0e6caadbf9324398c43ae21ddba98, type: 3}
+  - {fileID: 7597531028493972368, guid: 955bf76cf8ea7b44db9fa8bad71afe24, type: 3}
