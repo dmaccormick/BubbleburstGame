@@ -84,7 +84,13 @@ namespace DanMacC.BubbleBurst.Interactions
 
         public void SelectBubbleGroup()
         {
-            GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
+            //foreach(var bubble in CurrentBubbleGroup)
+            //{
+            //    bubble.Item1.OnSelected();
+            //}
+
+            //GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
+            //CurrentBubbleGroup.Clear();
 
             StartCoroutine(PopBubblesInSequence());
             IEnumerator PopBubblesInSequence()
@@ -107,9 +113,10 @@ namespace DanMacC.BubbleBurst.Interactions
                     bubble.OnSelected();
                 }
 
-                CurrentBubbleGroup.Clear();
-
                 m_IsAnimating = false;
+
+                GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
+                CurrentBubbleGroup.Clear();
             }
         }
     }

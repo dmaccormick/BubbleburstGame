@@ -50,8 +50,8 @@ namespace DanMacC.BubbleBurst.Grid
             int bubbleColourIndex = Random.Range(0, (int)BubbleColour.Count);
             Bubble bubblePrefab = m_Manager.GetBubblePrefab((BubbleColour)bubbleColourIndex);
 
-            m_Bubble = Instantiate(bubblePrefab, m_BubbleAnchor);
-            m_Bubble.Initialize(this);
+            m_Bubble = Instantiate(bubblePrefab);
+            AttachBubble(m_Bubble);
         }
 
         [ContextMenu("OutputDebugInfo()")]
@@ -67,6 +67,22 @@ namespace DanMacC.BubbleBurst.Grid
             }
             
             Debug.Log(debugString.ToString());
+        }
+
+        public Bubble RemoveBubble()
+        {
+            Bubble previousBubble = m_Bubble;
+            m_Bubble = null;
+
+            return previousBubble;
+        }
+
+        public void AttachBubble(Bubble bubble)
+        {
+            m_Bubble = bubble;
+            m_Bubble.transform.SetParent(m_BubbleAnchor, false);
+
+            m_Bubble.Initialize(this);
         }
     }
 }

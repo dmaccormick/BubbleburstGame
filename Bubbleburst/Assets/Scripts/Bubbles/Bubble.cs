@@ -90,6 +90,7 @@ namespace DanMacC.BubbleBurst.Bubbles
 
         public void OnSelected()
         {
+            m_GridCell.RemoveBubble();
             Destroy(this.gameObject);
         }
 

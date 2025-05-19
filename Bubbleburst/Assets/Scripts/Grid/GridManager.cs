@@ -2,6 +2,7 @@ using UnityEngine;
 using DanMacC.BubbleBurst.Bubbles;
 using System.Linq;
 using DanMacC.BubbleBurst.Utilities.Extensions;
+using DanMacC.BubbleBurst.Game;
 
 namespace DanMacC.BubbleBurst.Grid
 {
@@ -14,27 +15,23 @@ namespace DanMacC.BubbleBurst.Grid
         [SerializeField] private Transform m_CellParent;
         [SerializeField] private GridCell m_CellPrefab;
 
-        [Header("Grid Sizing")]
-        [SerializeField] private Vector2Int m_GridCellCount = new Vector2Int(5, 5);
-        [SerializeField] private float m_GridCellWorldSize = 1.0f;
-
         [Header("Bubbles")]
         [SerializeField] private Bubble[] m_BubblePrefabs;
 
+        private Vector2Int m_GridCellCount;
+        private float m_GridCellWorldSize;
         private GridCell[,] m_Cells;
-
-        private void Awake()
-        {
-            GenerateGrid();
-        }
 
         /// <summary>
         /// Generates the grid from the bottom left
         /// Meaning the bottom left will be (0, 0) and the top will be (width, height)
         /// The grid is centered around the Transform assigned in the inspector (presumably the camera focus point)
         /// </summary>
-        public void GenerateGrid()
+        public void GenerateGrid(Vector2Int gridCellCount, float cellWorldSize)
         {
+            m_GridCellCount = gridCellCount;
+            m_GridCellWorldSize = cellWorldSize;
+
             CleanUpGrid();
 
             GenerateCells();
@@ -77,10 +74,9 @@ namespace DanMacC.BubbleBurst.Grid
                     if (TryGetCell(cell.GridCoord + Vector2Int.left, out var leftNeighbour))    cell.SetNeighbour(Vector2Int.left, leftNeighbour);
                 }
             }
-
         }
 
-        public void CleanUpGrid()
+        private void CleanUpGrid()
         {
             if (m_Cells == null) return;
 
@@ -140,6 +136,49 @@ namespace DanMacC.BubbleBurst.Grid
             bottomLeftPosition.z = m_CenterAnchor.position.z;
 
             return bottomLeftPosition;
+        }
+
+        /// <summary>
+        /// Go through all of the bubbles in the grid and move them down with gravity if needed
+        /// The bottom row would never need to drop so can skip over that and start on the second row
+        /// Then work upwards so all bubbles would only need to move a maximum of once
+        /// </summary>
+        public void MoveBubblesDown()
+        {
+            for (int x = 0; x < m_Cells.GetLength(0); ++x)
+            {
+                for (int y = 1; y < m_Cells.GetLength(1); ++y)
+                {
+                    // Skip over this cell if there is no bubble in it
+                    var startingCell = m_Cells[x, y];
+                    if (startingCell.IsEmpty) continue;
+
+                    // Start searching down from this point and find the next space to drop down to if applicable
+                    var targetCell = startingCell;
+                    for (int checkingY = y - 1; checkingY >= 0; checkingY--)
+                    {
+                        var checkingCell = m_Cells[x, checkingY];
+
+                        if (checkingCell.IsEmpty)
+                        {
+                            // There is a space here so it becomes the new target
+                            targetCell = checkingCell;
+                        }
+                        else
+                        {
+                            // There is not a space here so we are done searching
+                            break;
+                        }
+                    }
+
+                    // If we found a new space to move to, transfer the bubble there
+                    if (targetCell != startingCell)
+                    {
+                        var bubble = startingCell.RemoveBubble();
+                        targetCell.AttachBubble(bubble);
+                    }
+                }
+            }
         }
     }
 }

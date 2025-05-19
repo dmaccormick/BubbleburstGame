@@ -43,15 +43,5 @@ namespace DanMacC.BubbleBurst.Utilities
                 return (T)m_Instance;
             }
         }
-
-        private void Awake()
-        {
-            // Covers the case of a new Singleton instance being created past the initial call
-            // Ex: loading a new scene that has the same singleton in it
-            if (this != Instance)
-            {
-                Destroy(this.gameObject);
-            }
-        }
     }
 }
