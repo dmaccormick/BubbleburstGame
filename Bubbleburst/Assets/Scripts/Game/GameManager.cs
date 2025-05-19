@@ -74,12 +74,20 @@ namespace DanMacC.BubbleBurst.Game
 
         public void CheckForGameOver()
         {
-
+            if (!m_GridManager.CheckForValidMoves())
+            {
+                OnGameOver();
+            }
         }
 
         public void OnBoardCleared()
         {
-            Debug.Log("<color=green> YOU WIN!</color>");
+            Debug.Log("<color=green>YOU WIN!</color>");
+        }
+
+        public void OnGameOver()
+        {
+            Debug.Log($"<color=red>GAME OVER! Final Score = {m_Score}</color>");
         }
     }
 }

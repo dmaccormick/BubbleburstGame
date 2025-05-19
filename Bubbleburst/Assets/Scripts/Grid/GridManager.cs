@@ -3,6 +3,7 @@ using DanMacC.BubbleBurst.Bubbles;
 using System.Linq;
 using DanMacC.BubbleBurst.Utilities.Extensions;
 using DanMacC.BubbleBurst.Game;
+using System.Collections.Generic;
 
 namespace DanMacC.BubbleBurst.Grid
 {
@@ -229,5 +230,49 @@ namespace DanMacC.BubbleBurst.Grid
         /// So, can simply check if the bottom row has a bubble to determine if the column is empty or not
         /// </summary>
         public bool IsColumnEmpty(int x) => m_Cells[x, 0].IsEmpty;
+
+        /// <summary>
+        /// Do a search of the board to see if any of the remaining cells hold bubbles which can be grouped
+        /// Start from the bottom right of the board because the bubbles shift down and right. Therefore, the most likely place to have bubbles left in the end game
+        /// This should reduce the amount of cells searched dramatically
+        /// Similarly, exit as soon as a valid move has been found instead of continuing to search
+        /// Also, keep track of which cells have been searched already to avoid doing extra work
+        /// </summary>
+        public bool CheckForValidMoves()
+        {
+            HashSet<GridCell> searchedCells = new();
+
+            for (int x = m_Cells.GetLength(0) - 1; x >= 0; --x)
+            {
+                for (int y = 0; y < m_Cells.GetLength(1); ++y)
+                {
+                    var cell = m_Cells[x, y];
+
+                    if (searchedCells.Contains(cell)) continue;
+                    searchedCells.Add(cell);
+
+                    if (cell.IsEmpty) continue;
+
+                    foreach(var neighbourCell in cell.NeighbourCells)
+                    {
+                        searchedCells.Add(neighbourCell);
+
+                        if (CheckForMatchWithCell(cell, neighbourCell))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool CheckForMatchWithCell(GridCell checkingCell, GridCell targetCell)
+        {
+            return targetCell != null
+                && !targetCell.IsEmpty
+                && checkingCell.Bubble.Colour == targetCell.Bubble.Colour;
+        }
     }
 }
