@@ -4,11 +4,15 @@ using System.Linq;
 using DanMacC.BubbleBurst.Utilities.Extensions;
 using DanMacC.BubbleBurst.Game;
 using System.Collections.Generic;
+using DanMacC.BubbleBurst.Utilities;
 
 namespace DanMacC.BubbleBurst.Grid
 {
     public class GridManager : MonoBehaviour
     {
+        public const float GEM_FALL_SPEED = 3.0f;
+        public const float GEM_COLUMN_SLIDE_SPEED = 3.0f;
+
         public float HalfCellWorldSize => m_GridCellWorldSize * 0.5f;
 
         [Header("Grid References")]
@@ -176,7 +180,14 @@ namespace DanMacC.BubbleBurst.Grid
                     if (targetCell != startingCell)
                     {
                         var bubble = startingCell.RemoveBubble();
-                        targetCell.AttachBubble(bubble);
+                        targetCell.AttachBubble(bubble, false);
+
+                        Vector3Tween bubbleMoveTween = TweenManager.Instance.CreateTween();
+                        bubbleMoveTween.StartTween(
+                            bubble.transform.position,
+                            targetCell.BubbleAnchorPosition,
+                            GEM_FALL_SPEED,
+                            tweenedPos => bubble.transform.position = tweenedPos);
                     }
                 }
             }
@@ -211,15 +222,25 @@ namespace DanMacC.BubbleBurst.Grid
                 }
 
                 // If there is a new target column, transfer all the bubbles there
-                for (int y = 0; y < m_Cells.GetLength(1); ++y)
+                if (x != targetX)
                 {
-                    var startingCell = m_Cells[x, y];
-                    var targetCell = m_Cells[targetX, y];
-                    
-                    if (!startingCell.IsEmpty)
+                    for (int y = 0; y < m_Cells.GetLength(1); ++y)
                     {
-                        var bubble = startingCell.RemoveBubble();
-                        targetCell.AttachBubble(bubble);
+                        var startingCell = m_Cells[x, y];
+                        var targetCell = m_Cells[targetX, y];
+
+                        if (!startingCell.IsEmpty)
+                        {
+                            var bubble = startingCell.RemoveBubble();
+                            targetCell.AttachBubble(bubble, false);
+
+                            Vector3Tween bubbleMoveTween = TweenManager.Instance.CreateTween();
+                            bubbleMoveTween.StartTween(
+                                bubble.transform.position,
+                                targetCell.BubbleAnchorPosition,
+                                GEM_COLUMN_SLIDE_SPEED,
+                                tweenedPos => bubble.transform.position = tweenedPos);
+                        }
                     }
                 }
             }

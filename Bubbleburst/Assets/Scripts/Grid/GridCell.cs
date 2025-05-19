@@ -14,6 +14,7 @@ namespace DanMacC.BubbleBurst.Grid
         public Vector2Int GridCoord => m_GridCoord;
         public Dictionary<Vector2Int, GridCell>.ValueCollection NeighbourCells => m_Neighbours.Values;
         public Bubble Bubble => m_Bubble;
+        public Vector3 BubbleAnchorPosition => m_BubbleAnchor.position;
 
         [SerializeField] private Transform m_BubbleAnchor;
 
@@ -51,7 +52,7 @@ namespace DanMacC.BubbleBurst.Grid
             Bubble bubblePrefab = m_Manager.GetBubblePrefab((BubbleColour)bubbleColourIndex);
 
             m_Bubble = Instantiate(bubblePrefab);
-            AttachBubble(m_Bubble);
+            AttachBubble(m_Bubble, true);
         }
 
         [ContextMenu("OutputDebugInfo()")]
@@ -77,10 +78,10 @@ namespace DanMacC.BubbleBurst.Grid
             return previousBubble;
         }
 
-        public void AttachBubble(Bubble bubble)
+        public void AttachBubble(Bubble bubble, bool snapToAnchor)
         {
             m_Bubble = bubble;
-            m_Bubble.transform.SetParent(m_BubbleAnchor, false);
+            m_Bubble.transform.SetParent(m_BubbleAnchor, !snapToAnchor);
 
             m_Bubble.Initialize(this);
         }

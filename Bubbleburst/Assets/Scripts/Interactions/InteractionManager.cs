@@ -1,5 +1,7 @@
 using DanMacC.BubbleBurst.Bubbles;
 using DanMacC.BubbleBurst.Game;
+using DanMacC.BubbleBurst.Grid;
+using DanMacC.BubbleBurst.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +11,8 @@ namespace DanMacC.BubbleBurst.Interactions
     public class InteractionManager : MonoBehaviour
     {
         public const float DELAY_PER_BUBBLE_DISTANCE = 0.1f;
+
+        [SerializeField] private GridManager m_GridManager;
 
         /// <summary>
         /// The int represents the 'depth' of the bubble relative to the first one (the first one is 0)
@@ -25,7 +29,7 @@ namespace DanMacC.BubbleBurst.Interactions
             // Only perform the raycast if the mouse has actually moved
             // No need to waste the calculation for the raycast otherwise
             // Also, don't do it if waiting for one of the animations to complete
-            if (m_IsAnimating) return;
+            if (m_IsAnimating || TweenManager.Instance.IsAnimating) return;
             if (Input.mousePosition == m_LastMousePosition) return;
             m_LastMousePosition = Input.mousePosition;
 

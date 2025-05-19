@@ -42,9 +42,17 @@ namespace DanMacC.BubbleBurst.Game
             {
                 // Otherwise, we need to make the bubbles fall down with gravity and slide columns to the right
                 // Then also need to check if there are any viable groups left. If not, the game is over
-                MoveBubblesDown();
-                MoveColumnsOver();
-                CheckForGameOver();
+                StartCoroutine(DoBubblePopSequence());
+                IEnumerator DoBubblePopSequence()
+                {
+                    MoveBubblesDown();
+                    yield return new WaitUntil(() => !TweenManager.Instance.IsAnimating);
+
+                    MoveColumnsOver();
+                    yield return new WaitUntil(() => !TweenManager.Instance.IsAnimating);
+
+                    CheckForGameOver();
+                }
             }
         }
 
