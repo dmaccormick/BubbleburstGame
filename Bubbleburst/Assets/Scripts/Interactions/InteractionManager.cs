@@ -1,7 +1,7 @@
 using DanMacC.BubbleBurst.Bubbles;
+using DanMacC.BubbleBurst.Game;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace DanMacC.BubbleBurst.Interactions
@@ -18,11 +18,14 @@ namespace DanMacC.BubbleBurst.Interactions
         private List<(Bubble, int)> CurrentBubbleGroup = new();
         private Bubble CurrentMouseTarget;
         private Vector3 m_LastMousePosition;
+        private bool m_IsAnimating = false;
 
         private void FixedUpdate()
         {
             // Only perform the raycast if the mouse has actually moved
             // No need to waste the calculation for the raycast otherwise
+            // Also, don't do it if waiting for one of the animations to complete
+            if (m_IsAnimating) return;
             if (Input.mousePosition == m_LastMousePosition) return;
             m_LastMousePosition = Input.mousePosition;
 
@@ -81,9 +84,13 @@ namespace DanMacC.BubbleBurst.Interactions
 
         public void SelectBubbleGroup()
         {
+            GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
+
             StartCoroutine(PopBubblesInSequence());
             IEnumerator PopBubblesInSequence()
             {
+                m_IsAnimating = true;
+
                 int currentDepth = 0;
 
                 foreach (var bubbleWithDepth in CurrentBubbleGroup)
@@ -101,6 +108,8 @@ namespace DanMacC.BubbleBurst.Interactions
                 }
 
                 CurrentBubbleGroup.Clear();
+
+                m_IsAnimating = false;
             }
         }
     }

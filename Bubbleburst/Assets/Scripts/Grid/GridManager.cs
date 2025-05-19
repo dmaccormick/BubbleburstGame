@@ -1,7 +1,7 @@
 using UnityEngine;
-using DanMacC.Utilities.Extensions;
 using DanMacC.BubbleBurst.Bubbles;
 using System.Linq;
+using DanMacC.BubbleBurst.Utilities.Extensions;
 
 namespace DanMacC.BubbleBurst.Grid
 {

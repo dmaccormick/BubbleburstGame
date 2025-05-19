@@ -1,4 +1,4 @@
-namespace DanMacC.Utilities.Extensions
+namespace DanMacC.BubbleBurst.Utilities.Extensions
 {
     public static class IntExtensions
     {
