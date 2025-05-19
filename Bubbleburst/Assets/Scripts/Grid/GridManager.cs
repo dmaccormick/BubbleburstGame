@@ -125,11 +125,11 @@ namespace DanMacC.BubbleBurst.Grid
         {
             Vector3 bottomLeftPosition = new Vector3();
 
-            int cellSpacesToMoveX = m_GridCellCount.x / 2;
+            int cellSpacesToMoveX = (m_GridCellCount.x - 1) / 2;
             bottomLeftPosition.x = m_CenterAnchor.position.x - (cellSpacesToMoveX * m_GridCellWorldSize);
             bottomLeftPosition.x -= (m_GridCellCount.x.IsEven()) ? HalfCellWorldSize : 0.0f;
 
-            int cellSpacesToMoveY = m_GridCellCount.y / 2;
+            int cellSpacesToMoveY = (m_GridCellCount.y - 1) / 2;
             bottomLeftPosition.y = m_CenterAnchor.position.y - (cellSpacesToMoveX * m_GridCellWorldSize);
             bottomLeftPosition.y -= (m_GridCellCount.y.IsEven()) ? HalfCellWorldSize : 0.0f;
 
