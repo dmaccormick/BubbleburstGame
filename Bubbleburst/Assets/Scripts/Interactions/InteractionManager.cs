@@ -106,6 +106,7 @@ namespace DanMacC.BubbleBurst.Interactions
                 }
 
                 m_IsAnimating = false;
+                m_LastMousePosition = Vector2.zero;
 
                 GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
                 CurrentBubbleGroup.Clear();

@@ -19,8 +19,13 @@ namespace DanMacC.BubbleBurst.Bubbles
 
     public class Bubble : MonoBehaviour
     {
+        public const string OnHoveredAnimation = "OnHovered";
+        public const string OnUnhoveredAnimation = "OnUnhovered";
+        public const string OnPopFailedAnimation = "OnInvalidMove";
+
         public BubbleColour Colour => m_BubbleColour;
 
+        [SerializeField] private Animator m_Animator;
         [SerializeField] private BubbleColour m_BubbleColour;
         [SerializeField] private Transform m_Visuals;
 
@@ -80,12 +85,13 @@ namespace DanMacC.BubbleBurst.Bubbles
 
         public void OnHovered()
         {
-            transform.localScale = Vector3.one * 1.5f;
+            m_Animator.SetTrigger(OnHoveredAnimation);
         }
 
         public void OnUnhovered()
         {
-            transform.localScale = Vector3.one * 1.0f;
+            m_Animator.ResetTrigger(OnHoveredAnimation);
+            m_Animator.SetTrigger(OnUnhoveredAnimation);
         }
 
         public void OnSelected()
@@ -96,7 +102,7 @@ namespace DanMacC.BubbleBurst.Bubbles
 
         public void OnSelectionFailed()
         {
-            Debug.Log("Cannot delete a single bubble!");
+            m_Animator.SetTrigger(OnPopFailedAnimation);
         }
     }
 }
