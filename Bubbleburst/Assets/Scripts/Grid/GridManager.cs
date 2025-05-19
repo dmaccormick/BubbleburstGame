@@ -10,8 +10,8 @@ namespace DanMacC.BubbleBurst.Grid
 {
     public class GridManager : MonoBehaviour
     {
-        public const float GEM_FALL_SPEED = 3.0f;
-        public const float GEM_COLUMN_SLIDE_SPEED = 3.0f;
+        public const float GEM_FALL_SPEED = 5.0f;
+        public const float GEM_COLUMN_SLIDE_SPEED = 5.0f;
 
         public float HalfCellWorldSize => m_GridCellWorldSize * 0.5f;
 
