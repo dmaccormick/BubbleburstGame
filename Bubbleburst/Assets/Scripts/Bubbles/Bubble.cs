@@ -1,4 +1,7 @@
-﻿using DanMacC.BubbleBurst.Interactions;
+﻿using DanMacC.BubbleBurst.Grid;
+using DanMacC.BubbleBurst.Interactions;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace DanMacC.BubbleBurst.Bubbles
@@ -14,28 +17,85 @@ namespace DanMacC.BubbleBurst.Bubbles
         None
     }
 
-    public class Bubble : MonoBehaviour, IInteractable
+    public class Bubble : MonoBehaviour
     {
         public BubbleColour Colour => m_BubbleColour;
 
         [SerializeField] private BubbleColour m_BubbleColour;
         [SerializeField] private Transform m_Visuals;
 
-        #region IInteractable
-        public void OnTargetingStart()
+        private GridCell m_GridCell; 
+
+        public void Initialize(GridCell gridCell)
         {
-            m_Visuals.localScale = Vector3.one * 1.5f;
+            m_GridCell = gridCell;
         }
 
-        public void OnTargetingEnd()
+        /// <summary>
+        /// Performs a breadth-first search to get all of the bubbles that are connected to this one with the same colour. Also stores their depths
+        /// The depths in this case represent how far they are from the clicked bubble. This is used for the popping anim sequence
+        /// The goal of the animation sequence is to have the bubbles pop closest to furthest from the click
+        /// It should be a fun way of showing the combo'ing effect
+        /// </summary>
+        public List<(Bubble, int)> FindBubbleGroup()
         {
-            m_Visuals.localScale = Vector3.one;
+            Queue<GridCell> cellsToProcess = new();
+            cellsToProcess.Enqueue(m_GridCell);
+
+            Dictionary<GridCell, int> visitedCellDepths = new Dictionary<GridCell, int>();
+            visitedCellDepths.Add(m_GridCell, 0);
+
+            List<(Bubble, int)> matchedBubblesWithDepth = new();
+            matchedBubblesWithDepth.Add((this, 0));
+
+            while (cellsToProcess.Count > 0)
+            {
+                GridCell cell = cellsToProcess.Dequeue();
+                int currentDepth = visitedCellDepths[cell];
+
+                foreach (var neighbourCell in cell.NeighbourCells)
+                {
+                    if (neighbourCell == null) continue;
+
+                    if (!visitedCellDepths.ContainsKey(neighbourCell))
+                    {
+                        visitedCellDepths.Add(neighbourCell, currentDepth + 1);
+
+                        if (!neighbourCell.IsEmpty && neighbourCell.Bubble.Colour == m_BubbleColour)
+                        {
+                            cellsToProcess.Enqueue(neighbourCell);
+                            matchedBubblesWithDepth.Add((neighbourCell.Bubble, currentDepth + 1));
+                        }
+                    }
+                }
+            }
+
+            return matchedBubblesWithDepth;
         }
 
-        public void OnClicked()
+        public override string ToString()
         {
-            m_Visuals.localScale = Vector3.one * 2.0f;
+            return $"{m_GridCell.GridCoord} - {m_BubbleColour}";
         }
-        #endregion IInteractable
+
+        public void OnHovered()
+        {
+            transform.localScale = Vector3.one * 1.5f;
+        }
+
+        public void OnUnhovered()
+        {
+            transform.localScale = Vector3.one * 1.0f;
+        }
+
+        public void OnSelected()
+        {
+            Destroy(this.gameObject);
+        }
+
+        public void OnSelectionFailed()
+        {
+            Debug.Log("Cannot delete a single bubble!");
+        }
     }
 }
