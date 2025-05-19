@@ -8,6 +8,8 @@ namespace DanMacC.BubbleBurst.Interactions
 {
     public class InteractionManager : MonoBehaviour
     {
+        public const float DELAY_PER_BUBBLE_DISTANCE = 0.1f;
+
         /// <summary>
         /// The int represents the 'depth' of the bubble relative to the first one (the first one is 0)
         /// For every jump to a set of neighbours, the depth increases by 1
@@ -46,12 +48,7 @@ namespace DanMacC.BubbleBurst.Interactions
 
                 if (CurrentBubbleGroup.Count > 1)
                 {
-                    foreach (var bubbleWithDepth in CurrentBubbleGroup)
-                    {
-                        var bubble = bubbleWithDepth.Item1;
-                        bubble.OnSelected();
-                    }
-                    CurrentBubbleGroup.Clear();
+                    SelectBubbleGroup();
                 }
                 else
                 {
@@ -80,14 +77,31 @@ namespace DanMacC.BubbleBurst.Interactions
                 var bubble = bubbleWithDepth.Item1;
                 bubble.OnHovered();
             }
+        }
 
-            // TODO: Remove this
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (var item in CurrentBubbleGroup)
+        public void SelectBubbleGroup()
+        {
+            StartCoroutine(PopBubblesInSequence());
+            IEnumerator PopBubblesInSequence()
             {
-                stringBuilder.AppendLine($"{item.Item1.ToString()}, {item.Item2}");
+                int currentDepth = 0;
+
+                foreach (var bubbleWithDepth in CurrentBubbleGroup)
+                {
+                    var bubble = bubbleWithDepth.Item1;
+                    var depth = bubbleWithDepth.Item2;
+
+                    if (depth > currentDepth)
+                    {
+                        yield return new WaitForSeconds(DELAY_PER_BUBBLE_DISTANCE);
+                        currentDepth++;
+                    }
+
+                    bubble.OnSelected();
+                }
+
+                CurrentBubbleGroup.Clear();
             }
-            Debug.Log(stringBuilder.ToString());
         }
     }
 }
