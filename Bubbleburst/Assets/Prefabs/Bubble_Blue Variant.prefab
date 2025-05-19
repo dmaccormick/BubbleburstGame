@@ -12,6 +12,10 @@ PrefabInstance:
       value: Bubble_Blue Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2090048651681901215, guid: 1e59487b28c8f5c4ba3d0554c24d9c02, type: 3}
+      propertyPath: m_DestroyVFX
+      value: 
+      objectReference: {fileID: 7521283006629905650, guid: 1a0869dc92e1d9348b722d323dbfb3e8, type: 3}
+    - target: {fileID: 2090048651681901215, guid: 1e59487b28c8f5c4ba3d0554c24d9c02, type: 3}
       propertyPath: m_BubbleColour
       value: 2
       objectReference: {fileID: 0}

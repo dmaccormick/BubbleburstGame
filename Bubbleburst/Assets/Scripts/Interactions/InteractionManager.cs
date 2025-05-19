@@ -110,7 +110,7 @@ namespace DanMacC.BubbleBurst.Interactions
                         currentDepth++;
                     }
 
-                    bubble.OnSelected();
+                    bubble.OnPopped(depth);
                 }
 
                 m_IsAnimating = false;

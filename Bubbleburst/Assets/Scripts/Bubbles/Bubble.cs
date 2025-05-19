@@ -19,15 +19,19 @@ namespace DanMacC.BubbleBurst.Bubbles
 
     public class Bubble : MonoBehaviour
     {
-        public const string OnHoveredAnimation = "OnHovered";
-        public const string OnUnhoveredAnimation = "OnUnhovered";
-        public const string OnPopFailedAnimation = "OnInvalidMove";
+        public const string ANIM_ON_HOVERED = "OnHovered";
+        public const string ANIM_ON_UNHOVERED = "OnUnhovered";
+        public const string ANIM_ON_POP_FAILED = "OnPopFailed";
+
+        public const float VFX_SIZE_MAX_STEP_INCREASES = 5;
+        public const float VFX_SIZE_INCREASE_PER_DEPTH = 0.5f;
 
         public BubbleColour Colour => m_BubbleColour;
 
         [SerializeField] private Animator m_Animator;
         [SerializeField] private BubbleColour m_BubbleColour;
         [SerializeField] private Transform m_Visuals;
+        [SerializeField] private GameObject m_DestroyVFX;
 
         private GridCell m_GridCell; 
 
@@ -85,24 +89,30 @@ namespace DanMacC.BubbleBurst.Bubbles
 
         public void OnHovered()
         {
-            m_Animator.SetTrigger(OnHoveredAnimation);
+            m_Animator.SetTrigger(ANIM_ON_HOVERED);
         }
 
         public void OnUnhovered()
         {
-            m_Animator.ResetTrigger(OnHoveredAnimation);
-            m_Animator.SetTrigger(OnUnhoveredAnimation);
+            m_Animator.ResetTrigger(ANIM_ON_HOVERED);
+            m_Animator.SetTrigger(ANIM_ON_UNHOVERED);
         }
 
-        public void OnSelected()
+        public void OnPopped(int depth)
         {
             m_GridCell.RemoveBubble();
+
+            // NOTE: Pooling these VFX would be more efficient, especially for mobile
+            int destroyVFXSize = (int)Mathf.Min(VFX_SIZE_MAX_STEP_INCREASES, depth);
+            GameObject destroyedVFX = Instantiate(m_DestroyVFX, transform.position, Quaternion.identity, null);
+            destroyedVFX.transform.localScale = Vector3.one * (1.0f + (depth * VFX_SIZE_INCREASE_PER_DEPTH));
+
             Destroy(this.gameObject);
         }
 
         public void OnPopFailed()
         {
-            m_Animator.SetTrigger(OnPopFailedAnimation);
+            m_Animator.SetTrigger(ANIM_ON_POP_FAILED);
         }
     }
 }
