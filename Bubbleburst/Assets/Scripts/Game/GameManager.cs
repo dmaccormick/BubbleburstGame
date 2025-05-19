@@ -4,6 +4,7 @@ using DanMacC.BubbleBurst.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace DanMacC.BubbleBurst.Game
 {
@@ -21,6 +22,7 @@ namespace DanMacC.BubbleBurst.Game
 
         private void Start()
         {
+            Assert.IsTrue(m_GridCellCount.x > 0 && m_GridCellCount.y > 0, "The grid needs to have valid dimensions!");
             m_GridManager.GenerateGrid(m_GridCellCount, m_GridWorldCellSize);
         }
 
@@ -67,7 +69,7 @@ namespace DanMacC.BubbleBurst.Game
 
         public void MoveColumnsOver()
         {
-
+            m_GridManager.MoveBubblesRight();
         }
 
         public void CheckForGameOver()

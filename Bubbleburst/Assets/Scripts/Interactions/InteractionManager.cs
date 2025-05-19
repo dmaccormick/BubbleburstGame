@@ -84,14 +84,6 @@ namespace DanMacC.BubbleBurst.Interactions
 
         public void SelectBubbleGroup()
         {
-            //foreach(var bubble in CurrentBubbleGroup)
-            //{
-            //    bubble.Item1.OnSelected();
-            //}
-
-            //GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
-            //CurrentBubbleGroup.Clear();
-
             StartCoroutine(PopBubblesInSequence());
             IEnumerator PopBubblesInSequence()
             {

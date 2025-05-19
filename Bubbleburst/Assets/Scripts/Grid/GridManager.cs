@@ -68,10 +68,10 @@ namespace DanMacC.BubbleBurst.Grid
                 {
                     GridCell cell = m_Cells[x, y];
 
-                    if (TryGetCell(cell.GridCoord + Vector2Int.up, out var upNeighbour))        cell.SetNeighbour(Vector2Int.up, upNeighbour);
-                    if (TryGetCell(cell.GridCoord + Vector2Int.right, out var rightNeighbour))  cell.SetNeighbour(Vector2Int.right, rightNeighbour);
-                    if (TryGetCell(cell.GridCoord + Vector2Int.down, out var downNeighbour))    cell.SetNeighbour(Vector2Int.down, downNeighbour);
-                    if (TryGetCell(cell.GridCoord + Vector2Int.left, out var leftNeighbour))    cell.SetNeighbour(Vector2Int.left, leftNeighbour);
+                    if (TryGetCell(cell.GridCoord + Vector2Int.up, out var upNeighbour)) cell.SetNeighbour(Vector2Int.up, upNeighbour);
+                    if (TryGetCell(cell.GridCoord + Vector2Int.right, out var rightNeighbour)) cell.SetNeighbour(Vector2Int.right, rightNeighbour);
+                    if (TryGetCell(cell.GridCoord + Vector2Int.down, out var downNeighbour)) cell.SetNeighbour(Vector2Int.down, downNeighbour);
+                    if (TryGetCell(cell.GridCoord + Vector2Int.left, out var leftNeighbour)) cell.SetNeighbour(Vector2Int.left, leftNeighbour);
                 }
             }
         }
@@ -155,7 +155,7 @@ namespace DanMacC.BubbleBurst.Grid
 
                     // Start searching down from this point and find the next space to drop down to if applicable
                     var targetCell = startingCell;
-                    for (int checkingY = y - 1; checkingY >= 0; checkingY--)
+                    for (int checkingY = y - 1; checkingY >= 0; --checkingY)
                     {
                         var checkingCell = m_Cells[x, checkingY];
 
@@ -180,5 +180,54 @@ namespace DanMacC.BubbleBurst.Grid
                 }
             }
         }
+
+        /// <summary>
+        /// Go through all the columns in the grid and then shift them to the right if there is space
+        /// Similar to the rows, can start one column over since the right-most column definitely can't move
+        /// </summary>
+        public void MoveBubblesRight()
+        {
+            // -2 since length would be out of bounds AND start from one column shifted over
+            for (int x = m_Cells.GetLength(0) - 2; x >= 0; --x)
+            {
+                // If this column is empty, there is nothing to move
+                if (IsColumnEmpty(x)) continue;
+
+                // Check the columns to the right of this one to see if they are empty
+                int targetX = x;
+                for (int checkingColIndex = targetX + 1; checkingColIndex < m_Cells.GetLength(0); ++checkingColIndex)
+                {
+                    if (IsColumnEmpty(checkingColIndex))
+                    {
+                        // This column is empty so becomes a possible new spot to go to
+                        targetX = checkingColIndex;
+                    }
+                    else
+                    {
+                        // This column has at least one bubble in it and so cannot be moved into
+                        break;
+                    }
+                }
+
+                // If there is a new target column, transfer all the bubbles there
+                for (int y = 0; y < m_Cells.GetLength(1); ++y)
+                {
+                    var startingCell = m_Cells[x, y];
+                    var targetCell = m_Cells[targetX, y];
+                    
+                    if (!startingCell.IsEmpty)
+                    {
+                        var bubble = startingCell.RemoveBubble();
+                        targetCell.AttachBubble(bubble);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bubbles will always fall down towards the bottom
+        /// So, can simply check if the bottom row has a bubble to determine if the column is empty or not
+        /// </summary>
+        public bool IsColumnEmpty(int x) => m_Cells[x, 0].IsEmpty;
     }
 }
