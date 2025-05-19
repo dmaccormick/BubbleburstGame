@@ -42,7 +42,7 @@ namespace DanMacC.BubbleBurst.Bubbles
         /// The goal of the animation sequence is to have the bubbles pop closest to furthest from the click
         /// It should be a fun way of showing the combo'ing effect
         /// </summary>
-        public List<(Bubble, int)> FindBubbleGroup()
+        public Dictionary<Bubble, int> FindBubbleGroup()
         {
             Queue<GridCell> cellsToProcess = new();
             cellsToProcess.Enqueue(m_GridCell);
@@ -50,8 +50,8 @@ namespace DanMacC.BubbleBurst.Bubbles
             Dictionary<GridCell, int> visitedCellDepths = new Dictionary<GridCell, int>();
             visitedCellDepths.Add(m_GridCell, 0);
 
-            List<(Bubble, int)> matchedBubblesWithDepth = new();
-            matchedBubblesWithDepth.Add((this, 0));
+            Dictionary<Bubble, int> matchedBubblesWithDepth = new();
+            matchedBubblesWithDepth.Add(this, 0);
 
             while (cellsToProcess.Count > 0)
             {
@@ -69,7 +69,7 @@ namespace DanMacC.BubbleBurst.Bubbles
                         if (!neighbourCell.IsEmpty && neighbourCell.Bubble.Colour == m_BubbleColour)
                         {
                             cellsToProcess.Enqueue(neighbourCell);
-                            matchedBubblesWithDepth.Add((neighbourCell.Bubble, currentDepth + 1));
+                            matchedBubblesWithDepth.Add(neighbourCell.Bubble, currentDepth + 1);
                         }
                     }
                 }
@@ -100,7 +100,7 @@ namespace DanMacC.BubbleBurst.Bubbles
             Destroy(this.gameObject);
         }
 
-        public void OnSelectionFailed()
+        public void OnPopFailed()
         {
             m_Animator.SetTrigger(OnPopFailedAnimation);
         }

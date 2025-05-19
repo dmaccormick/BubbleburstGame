@@ -26,7 +26,7 @@ namespace DanMacC.BubbleBurst.Game
             m_GridManager.GenerateGrid(m_GridCellCount, m_GridWorldCellSize);
         }
 
-        public void RecordBubbleGroupPopped(List<(Bubble, int)> poppedBubbles)
+        public void RecordBubbleGroupPopped(Dictionary<Bubble, int> poppedBubbles)
         {
             m_TotalNumPopped += poppedBubbles.Count;
 
@@ -52,7 +52,7 @@ namespace DanMacC.BubbleBurst.Game
         /// Increase the score according to the algorith in the game design rules
         /// Score += n (n + 1), where n is the number of bubbles
         /// </summary>
-        public void CalculateScore(List<(Bubble, int)> poppedBubbles)
+        public void CalculateScore(Dictionary<Bubble, int> poppedBubbles)
         {
             int n = poppedBubbles.Count;
             int scoreIncrease = (n * (n + 1));

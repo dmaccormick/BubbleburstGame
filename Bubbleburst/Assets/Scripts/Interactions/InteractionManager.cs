@@ -15,7 +15,7 @@ namespace DanMacC.BubbleBurst.Interactions
         /// For every jump to a set of neighbours, the depth increases by 1
         /// This way, the bubbles that are further away can be popped later to make the animation more satisfying
         /// </summary>
-        private List<(Bubble, int)> CurrentBubbleGroup = new();
+        private Dictionary<Bubble, int> CurrentBubbleGroup = new();
         private Bubble CurrentMouseTarget;
         private Vector3 m_LastMousePosition;
         private bool m_IsAnimating = false;
@@ -36,9 +36,8 @@ namespace DanMacC.BubbleBurst.Interactions
                     // Also early-out if the mouse has moved but it is still on top of the same bubble
                     // Don't want to re-do the search process if not necessary
                     if (newBubble == CurrentMouseTarget) return;
-                    CurrentMouseTarget = newBubble;
 
-                    HoverBubbleGroup(CurrentMouseTarget);
+                    HoverBubbleGroup(newBubble);
                 }
             }
         }
@@ -51,11 +50,11 @@ namespace DanMacC.BubbleBurst.Interactions
 
                 if (CurrentBubbleGroup.Count > 1)
                 {
-                    SelectBubbleGroup();
+                    PopBubbleGroup();
                 }
                 else
                 {
-                    CurrentMouseTarget.OnSelectionFailed();
+                    CurrentMouseTarget.OnPopFailed();
                 }
             }
         }
@@ -64,25 +63,34 @@ namespace DanMacC.BubbleBurst.Interactions
         {
             foreach(var bubbleWithDepth in CurrentBubbleGroup)
             {
-                var bubble = bubbleWithDepth.Item1;
+                var bubble = bubbleWithDepth.Key;
                 bubble.OnUnhovered();
             }
             CurrentBubbleGroup.Clear();
         }
 
-        public void HoverBubbleGroup(Bubble startingBubble)
+        public void HoverBubbleGroup(Bubble newTargetBubble)
         {
-            UnhoverBubbleGroup();
+            var newBubbleGroup = newTargetBubble.FindBubbleGroup();
 
-            CurrentBubbleGroup = startingBubble.FindBubbleGroup();
+            // If the new bubble group includes the previous target bubble, there is no need to play the unhover sequence
+            // This is because the same group is being selected, just with different depths
+            if (CurrentMouseTarget != null && !newBubbleGroup.ContainsKey(CurrentMouseTarget))
+            {
+                UnhoverBubbleGroup();
+            }
+
+            CurrentMouseTarget = newTargetBubble;
+            CurrentBubbleGroup = newBubbleGroup;
+
             foreach (var bubbleWithDepth in CurrentBubbleGroup)
             {
-                var bubble = bubbleWithDepth.Item1;
+                var bubble = bubbleWithDepth.Key;
                 bubble.OnHovered();
             }
         }
 
-        public void SelectBubbleGroup()
+        public void PopBubbleGroup()
         {
             StartCoroutine(PopBubblesInSequence());
             IEnumerator PopBubblesInSequence()
@@ -93,8 +101,8 @@ namespace DanMacC.BubbleBurst.Interactions
 
                 foreach (var bubbleWithDepth in CurrentBubbleGroup)
                 {
-                    var bubble = bubbleWithDepth.Item1;
-                    var depth = bubbleWithDepth.Item2;
+                    var bubble = bubbleWithDepth.Key;
+                    var depth = bubbleWithDepth.Value;
 
                     if (depth > currentDepth)
                     {
@@ -106,7 +114,7 @@ namespace DanMacC.BubbleBurst.Interactions
                 }
 
                 m_IsAnimating = false;
-                m_LastMousePosition = Vector2.zero;
+                m_LastMousePosition = Vector2.zero; // Reset the mouse position to allow for raycasting since this selection is gone
 
                 GameManager.Instance.RecordBubbleGroupPopped(CurrentBubbleGroup);
                 CurrentBubbleGroup.Clear();
