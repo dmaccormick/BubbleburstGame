@@ -3,27 +3,33 @@ using DanMacC.BubbleBurst.Grid;
 using DanMacC.BubbleBurst.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace DanMacC.BubbleBurst.Game
 {
     public class GameManager : Singleton<GameManager>
     {
-        public int NumGridCells => m_GridCellCount.x * m_GridCellCount.y;
+        public static Difficulty SelectedDifficulty;
 
-        [Header("Grid Generation")]
+        public int NumGridCells => m_ActiveConfig.BoardCellCount.x * m_ActiveConfig.BoardCellCount.y;
+        public GameConfigurationSO ActiveConfiguration => m_ActiveConfig;
+
+        [SerializeField] private GameConfigurationSO[] m_GameConfigurations;
         [SerializeField] private GridManager m_GridManager;
-        [SerializeField] private Vector2Int m_GridCellCount = new Vector2Int(7, 7);
-        [SerializeField] private float m_GridWorldCellSize = 1.0f;
 
         private int m_Score = 0;
         private int m_TotalNumPopped = 0;
+        private GameConfigurationSO m_ActiveConfig;
 
         private void Start()
         {
-            Assert.IsTrue(m_GridCellCount.x > 0 && m_GridCellCount.y > 0, "The grid needs to have valid dimensions!");
-            m_GridManager.GenerateGrid(m_GridCellCount, m_GridWorldCellSize);
+            m_ActiveConfig = m_GameConfigurations.First(config => config.Difficulty == SelectedDifficulty);
+            Assert.IsNotNull(m_ActiveConfig, $"Could not find a matching configuration for the selected difficulty: {SelectedDifficulty}");
+
+            m_GridManager.GenerateGrid(m_ActiveConfig.BoardCellCount, m_ActiveConfig.BoardCellWorldSize);
         }
 
         public void RecordBubbleGroupPopped(Dictionary<Bubble, int> poppedBubbles)

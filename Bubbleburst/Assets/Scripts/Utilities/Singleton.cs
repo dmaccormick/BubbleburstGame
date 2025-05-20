@@ -28,7 +28,6 @@ namespace DanMacC.BubbleBurst.Utilities
                     // FindObjectOfType is slow so best to avoid doing frequently like in Update()
                     // However, okay to trigger once like this
                     m_Instance = FindObjectOfType<T>();
-                    DontDestroyOnLoad(m_Instance.gameObject);
 
                     // Destroy any others that are NOT the instance so we only have one
                     foreach (var instance in FindObjectsOfType<T>())
