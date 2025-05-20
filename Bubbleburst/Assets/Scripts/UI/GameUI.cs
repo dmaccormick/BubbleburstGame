@@ -23,6 +23,11 @@ namespace DanMacC.BubbleBurst.UI
             m_Leaderboard.LoadLeaderboard();
         }
 
+        public bool RecordLeaderboardScore(int newScore)
+        {
+            return m_Leaderboard.RecordScore(newScore);
+        }
+
         public void UpdateScoreUI(int newScore)
         {
             m_TxtScore.text = newScore.ToString();

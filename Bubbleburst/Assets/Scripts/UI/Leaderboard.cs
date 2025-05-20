@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace DanMacC.BubbleBurst.UI
@@ -73,6 +74,24 @@ namespace DanMacC.BubbleBurst.UI
             {
                 m_SpawnedEntries[i].UpdateData(i + 1, m_Scores[i]);
             }
+        }
+
+        public bool RecordScore(int newScore)
+        {
+            // Add the new score to the list and then resort it
+            m_Scores.Add(newScore);
+            m_Scores = m_Scores.OrderByDescending(val => val).ToList();
+
+            // Now, cut the list down to just the top 5
+            // Since it is sorted, just remove anything after the 5th element
+            m_Scores = m_Scores.GetRange(0, LEADERBOARD_LENGTH);
+
+            // Finally, save and refresh the leaderboard values
+            SaveLeaderboard();
+            UpdateUIEntries();
+
+            // Return if the score is one of the new leaderboard entries or not
+            return m_Scores.Contains(newScore);
         }
     }
 }

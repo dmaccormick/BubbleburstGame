@@ -421,6 +421,10 @@ PrefabInstance:
       value: Hard (9x9)
       objectReference: {fileID: 0}
     - target: {fileID: 1752566912130885245, guid: 8e68cac2c2ae0f5418a627e809853743, type: 3}
+      propertyPath: m_Difficulty
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1752566912130885245, guid: 8e68cac2c2ae0f5418a627e809853743, type: 3}
       propertyPath: m_LeaderboardID
       value: hard
       objectReference: {fileID: 0}
@@ -564,6 +568,10 @@ PrefabInstance:
     - target: {fileID: 8333458040289602, guid: 8e68cac2c2ae0f5418a627e809853743, type: 3}
       propertyPath: m_fontSizeBase
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1752566912130885245, guid: 8e68cac2c2ae0f5418a627e809853743, type: 3}
+      propertyPath: m_Difficulty
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1752566912130885245, guid: 8e68cac2c2ae0f5418a627e809853743, type: 3}
       propertyPath: m_LeaderboardID
