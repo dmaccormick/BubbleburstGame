@@ -1,5 +1,6 @@
 ﻿using DanMacC.BubbleBurst.Bubbles;
 using DanMacC.BubbleBurst.Grid;
+using DanMacC.BubbleBurst.UI;
 using DanMacC.BubbleBurst.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +20,10 @@ namespace DanMacC.BubbleBurst.Game
 
         [SerializeField] private GameConfigurationSO[] m_GameConfigurations;
         [SerializeField] private GridManager m_GridManager;
+        [SerializeField] private GameUI m_GameUI;
 
         private int m_Score = 0;
+        private int m_NumMovesMade = 0;
         private int m_TotalNumPopped = 0;
         private GameConfigurationSO m_ActiveConfig;
 
@@ -30,15 +33,23 @@ namespace DanMacC.BubbleBurst.Game
             Assert.IsNotNull(m_ActiveConfig, $"Could not find a matching configuration for the selected difficulty: {SelectedDifficulty}");
 
             m_GridManager.GenerateGrid(m_ActiveConfig.BoardCellCount, m_ActiveConfig.BoardCellWorldSize);
+
+            m_GameUI.UpdateGemCountUI(NumGridCells);
+            m_GameUI.UpdateScoreUI(m_Score);
+            m_GameUI.UpdateMoveCountUI(m_NumMovesMade);
         }
 
         public void RecordBubbleGroupPopped(Dictionary<Bubble, int> poppedBubbles)
         {
             m_TotalNumPopped += poppedBubbles.Count;
+            m_GameUI.UpdateGemCountUI(NumGridCells - m_TotalNumPopped);
+
+            m_NumMovesMade++;
+            m_GameUI.UpdateMoveCountUI(m_NumMovesMade);
 
             CalculateScore(poppedBubbles);
 
-            if (m_TotalNumPopped == NumGridCells)
+            if (m_TotalNumPopped >= NumGridCells)
             {
                 // Since new bubbles are not created, we can simply check the number of bubbles that have been popped to see if there are any left
                 // This saves having to go through and check all of the cells to see if they are empty
@@ -73,7 +84,7 @@ namespace DanMacC.BubbleBurst.Game
 
             m_Score += scoreIncrease;
 
-            Debug.Log($"Clicked {n} bubbles, score increase is {scoreIncrease}, new score is {m_Score}");
+            m_GameUI.UpdateScoreUI(m_Score);
         }
 
         public void MoveBubblesDown()
