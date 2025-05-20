@@ -43,6 +43,14 @@ namespace DanMacC.BubbleBurst.Interactions
 
                     HoverBubbleGroup(newBubble);
                 }
+                else
+                {
+                    ClearMouseTargeting();
+                }
+            }
+            else
+            {
+                ClearMouseTargeting();
             }
         }
 
@@ -61,6 +69,12 @@ namespace DanMacC.BubbleBurst.Interactions
                     CurrentMouseTarget.OnPopFailed();
                 }
             }
+        }
+
+        public void ClearMouseTargeting()
+        {
+            UnhoverBubbleGroup();
+            CurrentMouseTarget = null;
         }
 
         public void UnhoverBubbleGroup()
