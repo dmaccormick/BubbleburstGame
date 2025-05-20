@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using DanMacC.BubbleBurst.Bubbles;
+using System.Linq;
 
 namespace DanMacC.BubbleBurst.Grid
 {
@@ -11,6 +12,9 @@ namespace DanMacC.BubbleBurst.Grid
         public bool IsFilled => !IsEmpty;
         public Vector3 WorldPosition => transform.position;
         public Vector2Int GridCoord => m_GridCoord;
+        public Dictionary<Vector2Int, GridCell>.ValueCollection NeighbourCells => m_Neighbours.Values;
+        public Bubble Bubble => m_Bubble;
+        public Vector3 BubbleAnchorPosition => m_BubbleAnchor.position;
 
         [SerializeField] private Transform m_BubbleAnchor;
 
@@ -47,7 +51,8 @@ namespace DanMacC.BubbleBurst.Grid
             int bubbleColourIndex = Random.Range(0, (int)BubbleColour.Count);
             Bubble bubblePrefab = m_Manager.GetBubblePrefab((BubbleColour)bubbleColourIndex);
 
-            m_Bubble = Instantiate(bubblePrefab, m_BubbleAnchor);
+            m_Bubble = Instantiate(bubblePrefab);
+            AttachBubble(m_Bubble, true);
         }
 
         [ContextMenu("OutputDebugInfo()")]
@@ -63,6 +68,22 @@ namespace DanMacC.BubbleBurst.Grid
             }
             
             Debug.Log(debugString.ToString());
+        }
+
+        public Bubble RemoveBubble()
+        {
+            Bubble previousBubble = m_Bubble;
+            m_Bubble = null;
+
+            return previousBubble;
+        }
+
+        public void AttachBubble(Bubble bubble, bool snapToAnchor)
+        {
+            m_Bubble = bubble;
+            m_Bubble.transform.SetParent(m_BubbleAnchor, !snapToAnchor);
+
+            m_Bubble.Initialize(this);
         }
     }
 }
