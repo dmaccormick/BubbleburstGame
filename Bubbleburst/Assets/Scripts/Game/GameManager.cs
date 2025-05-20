@@ -108,25 +108,19 @@ namespace DanMacC.BubbleBurst.Game
 
         public void OnBoardCleared()
         {
-            Debug.Log("<color=green>YOU WIN!</color>");
-
+            m_GameUI.ShowVictoryUI();
             SaveFinalScore();
         }
 
         public void OnGameOver()
         {
-            Debug.Log($"<color=red>GAME OVER! Final Score = {m_Score}</color>");
-
+            m_GameUI.ShowGameOverUI();
             SaveFinalScore();
         }
 
         public void SaveFinalScore()
         {
-            bool newLeaderboardScore = m_GameUI.RecordLeaderboardScore(m_Score);
-            if (newLeaderboardScore)
-            {
-                Debug.Log("The score is on the board!");
-            }
+            m_GameUI.RecordLeaderboardScore(m_Score);
         }
     }
 }
