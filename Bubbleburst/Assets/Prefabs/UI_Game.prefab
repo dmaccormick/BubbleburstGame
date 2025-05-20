@@ -680,6 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MenuSceneID: 0_Menu
+  m_Leaderboard: {fileID: 3878869577562969306}
   m_TxtScore: {fileID: 5840389681870615401}
   m_GemCount: {fileID: 5840389681961643059}
   m_MoveCount: {fileID: 5840389681538388041}
@@ -2198,3 +2199,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3820250668169392399, guid: 2fd6f039b4396ff4bba384ea636c82cb, type: 3}
   m_PrefabInstance: {fileID: 2504070223570020645}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3878869577562969306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1663162852924718591, guid: 2fd6f039b4396ff4bba384ea636c82cb, type: 3}
+  m_PrefabInstance: {fileID: 2504070223570020645}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc24e45948c6ca5458a130bb0dd40813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

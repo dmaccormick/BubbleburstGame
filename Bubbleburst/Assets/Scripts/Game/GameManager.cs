@@ -37,6 +37,7 @@ namespace DanMacC.BubbleBurst.Game
             m_GameUI.UpdateGemCountUI(NumGridCells);
             m_GameUI.UpdateScoreUI(m_Score);
             m_GameUI.UpdateMoveCountUI(m_NumMovesMade);
+            m_GameUI.SetupLeaderboard(SelectedDifficulty);
         }
 
         public void RecordBubbleGroupPopped(Dictionary<Bubble, int> poppedBubbles)

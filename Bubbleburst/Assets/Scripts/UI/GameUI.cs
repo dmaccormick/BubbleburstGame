@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DanMacC.BubbleBurst.Game;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,11 +10,18 @@ namespace DanMacC.BubbleBurst.UI
     {
         [Header("Left Sidebar")]
         [SerializeField] private string m_MenuSceneID = "0_Menu";
+        [SerializeField] private Leaderboard m_Leaderboard;
 
         [Header("Right Sidebar")]
         [SerializeField] private TextMeshProUGUI m_TxtScore;
         [SerializeField] private TextMeshProUGUI m_GemCount;
         [SerializeField] private TextMeshProUGUI m_MoveCount;
+
+        public void SetupLeaderboard(Difficulty difficulty)
+        {
+            m_Leaderboard.Initialize(difficulty);
+            m_Leaderboard.LoadLeaderboard();
+        }
 
         public void UpdateScoreUI(int newScore)
         {

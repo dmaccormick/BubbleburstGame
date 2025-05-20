@@ -20,6 +20,11 @@ namespace DanMacC.BubbleBurst.UI
 
         public string GetEntryKey(int index) => string.Format(LEADERBOARD_ID_TEMPLATE, m_Difficulty.ToString(), (index + 1));
 
+        public void Initialize(Difficulty difficulty)
+        {
+            m_Difficulty = difficulty;
+        }
+
         public void SaveLeaderboard()
         {
             for (int i = 0; i < m_Scores.Count; i++)
